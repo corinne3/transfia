@@ -1,0 +1,10 @@
+<passages>
+{% for p in passages %}
+[{{ p.n }}] {{ p.label }} — {{ p.title }}{% if p.page %} (p. {{ p.page }}){% endif %}
+
+{{ p.text }}
+
+{% endfor %}
+</passages>
+
+Question : {{ question }}

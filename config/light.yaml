@@ -1,0 +1,30 @@
+# Configuration "ultra-légère" : zéro modèle téléchargé à part le LLM Ollama.
+# Utile pour un premier test rapide, ou pour comparer avec local.yaml (banc d'éval, F11/F14).
+name: light
+data_dir: data
+
+llm:
+  provider: ollama
+  model: qwen2.5:1.5b
+  big_model: null
+
+embedder:
+  kind: hashing              # embeddings "from scratch" (n-grammes hachés) : aucun modèle
+  dim: 512
+
+retrieval:
+  vector_store: memory       # recherche exacte en NumPy
+  reranker: lexical          # reranker from scratch
+
+ingestion:
+  parser: pypdf
+  chunking: structural
+  ner: gazetteer
+
+rag:
+  rewrite: false
+  verify: lexical
+
+observability:
+  traces: true
+  energy: estimate

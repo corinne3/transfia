@@ -1,0 +1,28 @@
+Rédige le livrable final demandé, en Markdown, à partir du plan et des résultats de chaque étape.
+- N'ajoute aucune information absente des résultats{% if evidence is defined and evidence %} et des passages ci-dessous{% endif %}.
+{% if evidence is defined and evidence %}
+- Après chaque information, cite le passage utilisé : [1], [2]...
+- N'écris PAS de section « Sources » : elle est ajoutée automatiquement à partir de tes citations.
+{% else %}
+- Termine par une section « Sources » listant les articles cités.
+{% endif %}
+- N'écris JAMAIS de texte à compléter (« [Rédiger ici] », « ... ») : si une information manque, écris « non couvert par le corpus ».
+- Ajoute à la fin : « Contenu généré par IA à partir des sources citées : à vérifier avant diffusion. »
+
+Demande : {{ task }}
+
+Plan : {{ plan.objectif }}
+{% for e in plan.etapes %}
+{{ loop.index }}. {{ e.titre }} — {{ e.description }}
+{% endfor %}
+
+Résultats :
+{% for r in results %}
+--- Étape {{ loop.index }} ---
+{{ r }}
+{% endfor %}
+{% if evidence is defined and evidence %}
+
+Passages du corpus :
+{{ evidence }}
+{% endif %}

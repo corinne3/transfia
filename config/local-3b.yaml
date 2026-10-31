@@ -1,0 +1,68 @@
+# Phase 2 — GROS modèle : même configuration que local.yaml, seul le modèle change
+# (un seul dépôt, trois configurations : comparaison équitable, résultats étiquetés par config).
+# ⚠️ qwen2.5:3b n'est PAS open source (Qwen Research License, non commercial) : à mentionner dans le README.
+# Configuration locale, pensée pour un PC CPU avec 8 Go de RAM.
+# Chaque choix est commenté : il illustre un compromis qualité / frugalité (section 11.1).
+name: local-3b
+data_dir: data
+
+llm:
+  provider: ollama
+  model: qwen2.5:3b           # GROS modèle (phase 2). Licence : Qwen Research License (usage de recherche, NON commercial) : même famille que le 1,5B -> comparaison PURE de la taille
+  big_model: qwen2.5:3b      # ~2 Go : le "gros" modèle du routage et de la cascade (F14)
+  routing: false             # OPTION. false sur 8 Go : 1.5b + 3b + e5 + reranker saturent la RAM (swap,
+                             # ~7 min/question mesurées). true sur une machine de 16 Go et plus.
+                             # Ponctuellement : transfia ask "..." --routing
+  generation_model: null      # modèle des contenus pédagogiques (F7). null = model. Ex. qwen2.5:3b :
+                             # meilleurs QCM, plus lent ; ponctuellement : transfia generate ... --model qwen2.5:3b
+  vlm_model: moondream       # petit VLM (~1,7 Go) pour décrire les figures (F2, optionnel)
+  base_url: http://localhost:11434
+  temperature: 0.1
+  num_ctx: 4096              # 4k tokens suffisent pour 5 passages ; plus = KV cache plus gros
+  max_tokens: 700
+  timeout_s: 900             # délai max d'UN appel au LLM. 300 s (défaut) trop court pour ce modèle sur CPU 8 Go
+                             # (banc du 29/10 : 4 pannes « ReadTimeout ») ; un appel lent est noté, pas abandonné
+
+embedder:
+  kind: sentence-transformers
+  model: intfloat/multilingual-e5-small   # 118 M paramètres, multilingue, rapide sur CPU
+
+retrieval:
+  vector_store: qdrant       # Qdrant en mode local (un dossier), sans serveur
+  k_dense: 20
+  k_bm25: 20
+  k_final: 5
+  reranker: cross-encoder
+  reranker_model: cross-encoder/mmarco-mMiniLMv2-L12-H384-v1   # multilingue et léger
+  rerank_top: 10             # le cross-encoder relit 10 candidats (20 = 2x plus lent : 51 s mesurées sur 8 Go)
+  rerank_max_length: 256     # tokens lus par paire question/passage
+  min_score: -3.0            # "droit de ne pas savoir" : si le MEILLEUR passage a un score du reranker
+                             # inférieur à -3, on refuse SANS appeler le LLM (hors sujet évident).
+                             # Calibré sur nos essais : hors corpus = -1,9 ; vraies questions = -1,5 à +5,9.
+                             # Seuil prudent (aucune vraie question bloquée) ; à recalibrer avec transfia eval rag.
+
+ingestion:
+  parser: pymupdf            # léger. "docling" = meilleur sur les tableaux mais lourd pour 8 Go
+  chunking: structural
+  chunk_words: 220
+  overlap_words: 40
+  ner: gazetteer             # dictionnaire du domaine ; "gliner" = NER zero-shot (optionnel)
+
+rag:
+  rewrite: true
+  rewrite_only_with_history: true   # sans historique, la reformulation déformait la question
+                                    # (vu : "méthane entérique" -> "méthane dans l'assiette animale")
+  multi_query: false
+  hyde: false
+  verify: lexical            # "nli" si transformers est installé
+  max_tokens: 350            # réponse bornée à ~6 phrases (sans borne : liste de 700 tokens, coupée net)
+
+eval:
+  judges: [qwen2.5:1.5b, llama3.2:1b]   # deux familles différentes = moins d'angles morts partagés
+
+observability:
+  traces: true
+  otel: false                # true + Phoenix lancé : traces visibles sur http://localhost:6006
+  energy: estimate           # "codecarbon" si installé
+  cpu_watts: 25
+  grid_gco2_per_kwh: 50

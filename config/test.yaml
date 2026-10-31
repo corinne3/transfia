@@ -1,0 +1,23 @@
+# Configuration des tests automatisés : aucun réseau, aucun modèle.
+name: test
+data_dir: data/_test
+llm:
+  provider: fake
+  model: fake
+  big_model: null
+  cache: false
+embedder:
+  kind: hashing
+  dim: 256
+retrieval:
+  vector_store: memory
+  reranker: lexical
+ingestion:
+  parser: text
+  chunking: structural
+rag:
+  rewrite: false
+  verify: lexical
+observability:
+  traces: true
+  energy: estimate

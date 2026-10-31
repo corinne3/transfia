@@ -1,0 +1,18 @@
+Tu es rédacteur scientifique. Rédige un texte de 8 à 12 phrases sur : {{ topic }}.
+- Utilise UNIQUEMENT les passages ci-dessous. Cite le passage après chaque phrase informative : [n].
+- Ne généralise pas au-delà de ce que disent les passages.
+{% if draft %}
+
+Ton brouillon précédent :
+{{ draft }}
+{% endif %}
+{% if feedback %}
+
+Le relecteur a signalé ces problèmes. Corrige-les (supprime ou reformule les affirmations non soutenues) :
+{{ feedback }}
+{% endif %}
+
+Passages :
+{{ passages }}
+
+Renvoie uniquement le texte.

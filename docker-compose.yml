@@ -1,0 +1,16 @@
+# Optionnel (Docker Desktop) : API + Ollama. Sur 8 Go de RAM, préférer l'installation directe.
+services:
+  ollama:
+    image: ollama/ollama
+    ports: ["11434:11434"]
+    volumes: ["ollama:/root/.ollama"]
+  api:
+    build: .
+    ports: ["8000:8000"]
+    environment:
+      TRANSFIA_CONFIG: config/local.yaml
+      TRANSFIA_OLLAMA_URL: http://ollama:11434
+    volumes: ["./data:/app/data"]
+    depends_on: [ollama]
+volumes:
+  ollama: {}

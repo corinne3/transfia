@@ -1,0 +1,16 @@
+Adapte le texte ci-dessous au public : {{ niveau }}.
+{% if skill %}
+
+{{ skill }}
+{% endif %}
+
+Texte validé :
+{{ draft }}
+
+Règles :
+- Garde les chiffres et les nuances (« 20 % des colostrums », « certains », « souvent ») : ne généralise JAMAIS
+  (« 20 % des colostrums sont trop pauvres » ne devient pas « les colostrums sont faibles »).
+- N'ajoute aucune information absente du texte validé.
+- Écris des phrases simples, en un ou deux paragraphes (pas de liste numérotée).
+
+Renvoie uniquement le texte adapté, en gardant les citations [n].

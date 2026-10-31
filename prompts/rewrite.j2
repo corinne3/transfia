@@ -1,0 +1,13 @@
+Reformule la dernière question de l'utilisateur pour qu'elle soit autonome et précise, afin de chercher dans une base d'articles scientifiques sur l'élevage.
+- Corrige les fautes, développe les sigles si tu es sûr, intègre le contexte de l'historique si la question y fait référence.
+- Ne réponds PAS à la question. Ne rajoute aucune information.
+- Renvoie uniquement la question reformulée, sur une ligne.
+{% if history %}
+
+Historique :
+{% for h in history %}
+- {{ h }}
+{% endfor %}
+{% endif %}
+
+Question : {{ question }}

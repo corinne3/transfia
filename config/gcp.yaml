@@ -1,0 +1,31 @@
+# Chapitre 13 du dossier fonctionnel : même code, LLM Gemini via LiteLLM (API Gemini de Google AI Studio).
+# Prérequis : pip install -e ".[cloud]" (puis pip install -U litellm) et GEMINI_API_KEY dans .env
+# Niveau gratuit (vérifié le 29/10/2026 sur ai.google.dev) : SANS carte ni compte de facturation, quotas journaliers
+# par PROJET, remis à zéro à minuit heure du Pacifique (9 h à Paris). Limites exactes : aistudio.google.com/rate-limit
+# ⚠️ Conditions : un service ouvert à des utilisateurs de l'EEE (dont la France) doit passer au niveau payant ;
+#    pour tes essais personnels, le niveau gratuit suffit. Jamais de données sensibles ou personnelles.
+name: gcp
+data_dir: data
+
+llm:
+  provider: litellm
+  model: gemini/gemini-3.1-flash-lite     # Flash-Lite : le quota gratuit le plus large (centaines de requêtes/jour)
+  big_model: gemini/gemini-3.1-flash-lite # gemini/gemini-3.8-flash est meilleur mais son quota gratuit est ~20 requêtes/jour
+  temperature: 0.1
+  max_tokens: 700
+
+embedder:
+  kind: sentence-transformers             # on garde e5 local : on compare le LLM seul, et 0 requête d'API pour les vecteurs
+  model: intfloat/multilingual-e5-small
+
+retrieval:
+  vector_store: qdrant
+  reranker: cross-encoder
+
+rag:
+  rewrite: false                          # 1 appel LLM de moins par question : économise le quota
+  verify: lexical
+
+observability:
+  traces: true
+  energy: estimate                        # ⚠️ l'énergie mesurée est celle du PC, PAS celle des serveurs de Google

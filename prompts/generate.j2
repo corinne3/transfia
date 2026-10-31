@@ -1,0 +1,29 @@
+Tu es ingénieur pédagogique en élevage. Crée un contenu de type « {{ kind }} » sur le thème : {{ topic }}.
+
+Public visé : {{ niveau_desc }}. Utilise la valeur "{{ niveau }}" pour le champ niveau.
+{% if kind == "quiz" %}
+Nombre de questions : {{ n_questions }}.
+Pour chaque question : écris d'abord l'explication, PUIS mets dans "bonne_reponse" l'index (0=A, 1=B, 2=C, 3=D)
+de LA proposition que cette explication justifie. Une seule proposition doit être juste.
+{% endif %}
+
+Règles :
+- Utilise UNIQUEMENT les informations des passages ci-dessous. N'invente aucun chiffre.
+- Chaque champ "source" contient le numéro [n] du passage qui justifie l'information.
+- Rédige en français, avec un vocabulaire adapté au public visé.
+- Réponds uniquement avec le JSON demandé.
+{% if skill %}
+
+Savoir-faire à appliquer (skill) :
+{{ skill }}
+{% endif %}
+{% if example %}
+
+Exemple de contenu réussi (pour le style, pas pour le fond) :
+{{ example }}
+{% endif %}
+
+Passages :
+{% for p in passages %}
+[{{ p.n }}] ({{ p.label }}) {{ p.text }}
+{% endfor %}

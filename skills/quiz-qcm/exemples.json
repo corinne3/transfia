@@ -1,0 +1,18 @@
+{
+  "titre": "Exemple de style (thème fictif : l'abreuvement)",
+  "niveau": "bac_pro",
+  "questions": [
+    {
+      "enonce": "Pourquoi faut-il vérifier chaque jour les abreuvoirs d'un troupeau ?",
+      "choix": [
+        "Pour s'assurer que l'eau est propre et accessible",
+        "Pour mesurer la production de lait",
+        "Pour compter les animaux",
+        "Pour régler la température du bâtiment"
+      ],
+      "explication": "Une eau sale ou difficile d'accès réduit la consommation, ce qui pénalise la santé et la production.",
+      "bonne_reponse": 0,
+      "source": 1
+    }
+  ]
+}

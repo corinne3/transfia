@@ -1,0 +1,23 @@
+# Chapitre 14 du dossier : Azure OpenAI via LiteLLM.
+# Prérequis : pip install -e ".[cloud]" ; AZURE_API_KEY, AZURE_API_BASE, AZURE_API_VERSION dans .env
+name: azure
+data_dir: data
+
+llm:
+  provider: litellm
+  model: azure/<nom-de-ton-deploiement>   # le nom du déploiement créé dans AI Foundry
+  big_model: null
+  temperature: 0.1
+  max_tokens: 700
+
+embedder:
+  kind: sentence-transformers
+  model: intfloat/multilingual-e5-small
+
+retrieval:
+  vector_store: qdrant
+  reranker: cross-encoder
+
+observability:
+  traces: true
+  energy: estimate

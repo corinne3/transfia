@@ -1,0 +1,7 @@
+# Utiliser le modèle fine-tuné avec Ollama, sur CPU :
+#   1. renomme le fichier .gguf téléchargé depuis Colab en transfia-qcm.Q4_K_M.gguf et place-le dans finetuning/
+#   2. ollama create transfia-qcm -f finetuning/Modelfile
+#   3. compare : transfia generate quiz "..." --model transfia-qcm   (puis le même avec le modèle de base)
+FROM ./transfia-qcm.Q4_K_M.gguf
+PARAMETER temperature 0.2
+PARAMETER num_ctx 4096
